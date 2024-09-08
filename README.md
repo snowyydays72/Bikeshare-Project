@@ -5,7 +5,7 @@
 Bikeshare Project
 
 ### Description
-A python project that uses pandas to explore bikeshare data
+A python project that uses pandas to explore bikeshare data.
 
 ### Files used
 bikeshare.py
