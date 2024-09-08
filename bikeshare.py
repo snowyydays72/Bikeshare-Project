@@ -6,32 +6,35 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
+def get_user_input(prompt, valid_options):
+    """Helper function to get validated user input."""
+    while True:
+        user_input = input(prompt).lower()
+        if user_input in valid_options:
+            return user_input
+        print("Incorrect input. Please try again.")
+
 def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
+
+    city = get_user_input(
+        "Which city would you like to explore? (chicago, new york city, washington): ",
+        CITY_DATA.keys()
+    )
     
-    while True:
-        city = input("Which city would you like to explore? (chicago, new york city, washington): ").lower()
-        if city in CITY_DATA:
-            break
-        else:
-            print("Incorrect city. Please try again.")
+    month = get_user_input(
+        "Which month? (all, january, february, ... , june): ",
+        ['january', 'february', 'march', 'april', 'may', 'june', 'all']
+    )
     
-    while True:
-        month = input("Which month? (all, january, february, ... , june): ").lower()
-        if month in ['january', 'february', 'march', 'april', 'may', 'june', 'all']:
-            break
-        else:
-            print("Incorrect month. Please try again.")
-    
-    while True:
-        day = input("Which day? (all, monday, tuesday, ... sunday): ").lower()
-        if day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']:
-            break
-        else:
-            print("Incorrect day. Please try again.")
+    day = get_user_input(
+        "Which day? (all, monday, tuesday, ... sunday): ",
+        ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
+    )
     
     print('-'*40)
     return city, month, day
+
 
 def load_data(city, month, day):
     df = pd.read_csv(CITY_DATA[city])
