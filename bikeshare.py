@@ -95,30 +95,24 @@ def station_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def display_value_counts(df, column_name, title):
+    """Displays value counts for a given column."""
+    if column_name in df:
+        counts = df[column_name].value_counts().to_dict()
+        print(f'\n{title}:')
+        for value, count in counts.items():
+            print(f"  {value}: {count}")
+    else:
+        print(f"\n'{column_name}' data not available for this city.")
+
 def user_stats(df):
     """Displays statistics on bikeshare users."""
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
-    # Display counts of user types
-    if 'User Type' in df:
-        user_types = df['User Type'].value_counts().to_dict()
-        print('Counts of User Types:')
-        for user_type, count in user_types.items():
-            print(f"  {user_type}: {count}")
-    else:
-        print("'User Type' data not available for this city.")
+    display_value_counts(df, 'User Type', 'Counts of User Types')
+    display_value_counts(df, 'Gender', 'Counts of Gender')
 
-    # Display counts of gender (only available for some cities)
-    if 'Gender' in df:
-        gender_counts = df['Gender'].value_counts().to_dict()
-        print('\nCounts of Gender:')
-        for gender, count in gender_counts.items():
-            print(f"  {gender}: {count}")
-    else:
-        print("\n'Gender' data not available for this city.")
-
-    # Display earliest, most recent, and most common year of birth
     if 'Birth Year' in df:
         earliest_year = int(df['Birth Year'].min())
         most_recent_year = int(df['Birth Year'].max())
@@ -131,6 +125,7 @@ def user_stats(df):
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
+
 
 
 def display_raw_data(df):
