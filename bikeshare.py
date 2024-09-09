@@ -5,36 +5,33 @@ import numpy as np
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
-
-def get_user_input(prompt, valid_options):
-    """Helper function to get validated user input."""
-    while True:
-        user_input = input(prompt).lower()
-        if user_input in valid_options:
-            return user_input
-        print("Incorrect input. Please try again.")
-
+#Section to ask which city, month and day to display data
 def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
-
-    city = get_user_input(
-        "Which city would you like to explore? (chicago, new york city, washington): ",
-        CITY_DATA.keys()
-    )
     
-    month = get_user_input(
-        "Which month? (all, january, february, ... , june): ",
-        ['january', 'february', 'march', 'april', 'may', 'june', 'all']
-    )
+    while True:
+        city = input("Which city would you like to explore? (chicago, new york city, washington): ").lower()
+        if city in CITY_DATA:
+            break
+        else:
+            print("Incorrect city. Please try again.")
     
-    day = get_user_input(
-        "Which day? (all, monday, tuesday, ... sunday): ",
-        ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
-    )
+    while True:
+        month = input("Which month? (all, january, february, ... , june): ").lower()
+        if month in ['january', 'february', 'march', 'april', 'may', 'june', 'all']:
+            break
+        else:
+            print("Incorrect month. Please try again.")
+    
+    while True:
+        day = input("Which day? (all, monday, tuesday, ... sunday): ").lower()
+        if day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']:
+            break
+        else:
+            print("Incorrect day. Please try again.")
     
     print('-'*40)
     return city, month, day
-
 
 def load_data(city, month, day):
     df = pd.read_csv(CITY_DATA[city])
@@ -95,24 +92,30 @@ def station_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
-def display_value_counts(df, column_name, title):
-    """Displays value counts for a given column."""
-    if column_name in df:
-        counts = df[column_name].value_counts().to_dict()
-        print(f'\n{title}:')
-        for value, count in counts.items():
-            print(f"  {value}: {count}")
-    else:
-        print(f"\n'{column_name}' data not available for this city.")
-
 def user_stats(df):
     """Displays statistics on bikeshare users."""
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
-    display_value_counts(df, 'User Type', 'Counts of User Types')
-    display_value_counts(df, 'Gender', 'Counts of Gender')
+    # Display counts of user types
+    if 'User Type' in df:
+        user_types = df['User Type'].value_counts().to_dict()
+        print('Counts of User Types:')
+        for user_type, count in user_types.items():
+            print(f"  {user_type}: {count}")
+    else:
+        print("'User Type' data not available for this city.")
 
+    # Display counts of gender (only available for some cities)
+    if 'Gender' in df:
+        gender_counts = df['Gender'].value_counts().to_dict()
+        print('\nCounts of Gender:')
+        for gender, count in gender_counts.items():
+            print(f"  {gender}: {count}")
+    else:
+        print("\n'Gender' data not available for this city.")
+
+    # Display earliest, most recent, and most common year of birth
     if 'Birth Year' in df:
         earliest_year = int(df['Birth Year'].min())
         most_recent_year = int(df['Birth Year'].max())
@@ -125,7 +128,6 @@ def user_stats(df):
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-
 
 
 def display_raw_data(df):
